@@ -5,7 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -21,13 +23,17 @@ public class Avedit extends Application {
 
         BorderPane border = new BorderPane();
         HBox hbox = addHBox();
+        FlowPane toolPane = addToolBar();
+        FlowPane propPane = addPropertiesPane();
+        VBox canvas = addCanvas();
+
         border.setTop(hbox);
-        border.setLeft(addVbox());
-
-
+        border.setLeft(toolPane);
+        border.setRight(propPane);
+        border.setCenter(canvas);
 
         Scene scene = new Scene(border, 1920, 1280);
-        stage.setTitle("Hello!");
+        stage.setTitle("Avedit");
         stage.setScene(scene);
 
         stage.show();
@@ -41,7 +47,7 @@ public class Avedit extends Application {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(15, 12, 15, 12));
         hbox.setSpacing(10);
-        hbox.setStyle("-fx-background-color: #336699;");
+        hbox.setStyle("-fx-background-color: #212121;");
 
         Button testButton01 = new Button("Test1");
         testButton01.setPrefSize(100, 20);
@@ -52,6 +58,48 @@ public class Avedit extends Application {
         hbox.getChildren().addAll(testButton01, testButton02);
 
         return hbox;
+    }
+
+    private VBox addCanvas()
+    {
+        VBox canvas = new VBox();
+        canvas.setPadding(new Insets(25, 25, 25, 25));
+        canvas.setSpacing(10);
+        canvas.setStyle("-fx-background-color: #AAAAAA;");
+
+        return canvas;
+    }
+
+    private FlowPane addToolBar()
+    {
+        FlowPane fpane = new FlowPane();
+        fpane.setPadding(new Insets(25, 0, 5, 10));
+        fpane.setVgap(8);
+        fpane.setHgap(8);
+        fpane.setPrefWrapLength(120);
+        fpane.setStyle("-fx-background-color: #3D3D3D;");
+
+        Button tools[] = new Button[4];
+
+        for (int i=0; i<4; i++)
+        {
+            tools[i] = new Button("Testing " + i);
+            tools[i].setPrefSize(50, 50);
+            fpane.getChildren().add(tools[i]);
+        }
+        return fpane;
+    }
+
+    private FlowPane addPropertiesPane()
+    {
+        FlowPane properties = new FlowPane();
+        properties.setPadding(new Insets(25, 0, 5, 10));
+        properties.setVgap(8);
+        properties.setHgap(8);
+        properties.setPrefWrapLength(200);
+        properties.setStyle("-fx-background-color: #3D3D3D;");
+
+        return properties;
     }
 
     private VBox addVbox() {
