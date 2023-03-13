@@ -67,10 +67,6 @@ public class DrawingCanvas  {
             System.out.println("Drawing each object");
             gameObjects.get(x).draw(gc);
         }
-        /*for ( GameObject obj : gameObjects) {
-            //System.out.println("Found an object");
-            obj.draw(gc);
-        } */
     }
 
     public void dragHandler(MouseEvent me, GraphicsContext transgc)
@@ -144,10 +140,14 @@ public class DrawingCanvas  {
         return gridOn;
     }
 
-    public void reDraw(GraphicsContext gc)
+    public void reDraw(GraphicsContext gc, ArrayList<GameObject> obj)
     {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        for (GameObject wall: obj)
+        {
+            wall.draw(gc);
+        }
 
     }
     public void drawGrid(GraphicsContext gc)

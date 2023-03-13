@@ -3,14 +3,17 @@ package com.example.avedit;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.controlsfx.control.action.Action;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class Avedit extends Application {
     ArrayList<GameObject> gameObjects;
     Canvas c;
     Canvas t;
+    Group scrollGroup;
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -29,7 +33,11 @@ public class Avedit extends Application {
         HBox hbox = addHBox();
         FlowPane toolPane = addToolBar();
         FlowPane propPane = addPropertiesPane();
-        AnchorPane canvas = addVbox();
+        scrollGroup = addVbox();
+        ScrollPane canvas = new ScrollPane();
+        canvas.setStyle("-fx-background: #808080;");
+        canvas.setContent(scrollGroup);
+
 
         border.setTop(hbox);
         border.setLeft(toolPane);
@@ -42,12 +50,15 @@ public class Avedit extends Application {
 
         stage.show();
 
+
         double canvasWidth = border.getWidth() - toolPane.getWidth() - propPane.getWidth() - 20;
         double canvasHeight = border.getHeight() - hbox.getHeight() - 20;
         c.setHeight(canvasHeight);
         c.setWidth(canvasWidth);
         t.setWidth(canvasWidth);
         t.setHeight(canvasHeight);
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, canvasWidth, canvasHeight);
 
         drawingPane.setCanvasSize(canvasWidth, canvasHeight);
 
@@ -92,6 +103,8 @@ public class Avedit extends Application {
             fpane.getChildren().add(tools[i]);
         }
         tools[0].setOnAction(this::gridHandler);
+        tools[1].setOnAction(this::zoomInHandler);
+        tools[2].setOnAction(this::zoomOutHandler);
         return fpane;
     }
 
@@ -107,31 +120,28 @@ public class Avedit extends Application {
         return properties;
     }
 
-    private AnchorPane addVbox() {
-        AnchorPane vbox = new AnchorPane();
-        //VBox vbox = new VBox();
-        VBox.setVgrow(vbox, Priority.ALWAYS);
-        vbox.setPadding(new Insets(10));
-        //vbox.setSpacing(8);
+    private Group addVbox() {
 
-        drawingPane = new DrawingCanvas(500, 600);
+        Group canvasGroup = new Group();
+
+        drawingPane = new DrawingCanvas(1000, 1000);
         gameObjects = new ArrayList<>();
 
         c = new Canvas(0, 0);
         t = new Canvas(0, 0);
 
-        System.out.println(vbox.getHeight());
-        vbox.addEventHandler(MouseEvent.MOUSE_PRESSED, this::pressHandler);
-        vbox.addEventHandler(MouseEvent.MOUSE_RELEASED, this::releaseHandler);
-        vbox.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::dragHandler);
+        //System.out.println(vbox.getHeight());
+        canvasGroup.addEventHandler(MouseEvent.MOUSE_PRESSED, this::pressHandler);
+        canvasGroup.addEventHandler(MouseEvent.MOUSE_RELEASED, this::releaseHandler);
+        canvasGroup.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::dragHandler);
 
-        //vbox.getChildren().addAll(c, t);
-        vbox.getChildren().add(c);
-        vbox.getChildren().add(t);
+        canvasGroup.getChildren().addAll(c,t);
+
+        //vbox.getChildren().add(scrollPane);
 
         gc = c.getGraphicsContext2D();
         transgc = t.getGraphicsContext2D();
-        return vbox;
+        return canvasGroup;
     }
 
     private void pressHandler(MouseEvent me)
@@ -157,9 +167,25 @@ public class Avedit extends Application {
             drawingPane.drawGrid(gc);
     }
 
+    private void zoomIn()
+    {
+        scrollGroup.setScaleX(scrollGroup.getScaleX() * 2);
+        scrollGroup.setScaleY(scrollGroup.getScaleY() * 2);
+    }
+
+    private void zoomOut()
+    {
+        scrollGroup.setScaleX(scrollGroup.getScaleX() / 2);
+        scrollGroup.setScaleY(scrollGroup.getScaleY() / 2);
+    }
+
     private void gridHandler(ActionEvent actionEvent)
     {
         toggleGrid();
     }
+
+    private void zoomInHandler(ActionEvent actionEvent) { zoomIn();}
+
+    private void zoomOutHandler(ActionEvent actionEvent) { zoomOut();}
 }
 
