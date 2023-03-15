@@ -14,12 +14,12 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class DrawingCanvas  {
-    double SCREEN_WIDTH;
-    double SCREEN_HEIGHT;
+    double canvasWidth;
+    double canvasHeight;
     private double sx, sy;
     private double ex, ey;
     private double startingX, startingY;
-    private int selecteObject = 0;
+    private int selectedObject = 0;
     private Color shapeColour = Color.BLUE;
     private Boolean gridOn = true;
     private int gridSpacing = 50;
@@ -43,7 +43,7 @@ public class DrawingCanvas  {
         GameObject s;
         try
         {
-            if (me.getX() < 0 || me.getY() < 0 || me.getX() > SCREEN_WIDTH || me.getY() > SCREEN_HEIGHT)
+            if (me.getX() < 0 || me.getY() < 0 || me.getX() > canvasWidth || me.getY() > canvasHeight)
                 throw new IllegalArgumentException();
             s = new WallObject("Wall 01", sx, sy, ex, ey, Color.BLUE, Color.BLUE);
             System.out.println(gameObjects.size());
@@ -53,15 +53,12 @@ public class DrawingCanvas  {
         catch (IllegalArgumentException e)
         {
             System.out.println("Error on release");
-            gc.setFill(Color.LIGHTGRAY);
-            gc.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            gc.setFill(Color.WHITE);
+            gc.fillRect(0, 0, canvasWidth, canvasHeight);
         } // end catch
 
-        //gc.setFill(Color.BLACK);
-        //gc.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
         gc.setFill(Color.BLUE);
-        transgc.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        transgc.clearRect(0, 0, canvasWidth, canvasHeight);
         for (int x = 0; x < gameObjects.size(); x ++)
         {
             System.out.println("Drawing each object");
@@ -73,9 +70,9 @@ public class DrawingCanvas  {
     {
         try // make sure the mouse is in a valid location
         {
-            if (me.getX() < 0 || me.getY() < 0 || me.getX() > SCREEN_WIDTH || me.getY() > SCREEN_HEIGHT)
+            if (me.getX() < 0 || me.getY() < 0 || me.getX() > canvasWidth || me.getY() > canvasHeight)
                 throw new IllegalArgumentException();
-            transgc.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            transgc.clearRect(0, 0, canvasWidth, canvasHeight);
 
                     if (me.getX() < startingX && me.getY() > startingY)
                     {
@@ -113,54 +110,32 @@ public class DrawingCanvas  {
         catch (IllegalArgumentException e)
         {
             System.out.println("Drag failed" + me.getX() +  " " + me.getY());
-            System.out.println(SCREEN_HEIGHT);
+            System.out.println(canvasHeight);
             System.out.println(transgc.toString());
         } // end catch
     }
 
     public void setCanvasSize(double width, double height)
     {
-        SCREEN_WIDTH = width;
-        SCREEN_HEIGHT = height;
+        canvasWidth = width;
+        canvasHeight = height;
     }
 
     public DrawingCanvas(double width, double height)
     {
         System.out.println("Creating new Drawing Canvas");
-        SCREEN_HEIGHT = height;
-        SCREEN_WIDTH = width;
-    }
-
-    public boolean toggleGrid()
-    {
-        if (gridOn)
-            gridOn = false;
-        else
-            gridOn = true;
-        return gridOn;
+        canvasWidth = height;
+        canvasHeight = width;
     }
 
     public void reDraw(GraphicsContext gc, ArrayList<GameObject> obj)
     {
         gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        gc.fillRect(0, 0, canvasWidth, canvasHeight);
         for (GameObject wall: obj)
         {
             wall.draw(gc);
         }
 
-    }
-    public void drawGrid(GraphicsContext gc)
-    {
-        for (int x = gridSpacing; x < SCREEN_WIDTH - gridSpacing; x = x + gridSpacing)
-        {
-            GridLine line = new GridLine(x, 0, x, SCREEN_HEIGHT);
-            line.draw(gc);
-        }
-        for (int y = gridSpacing; y < SCREEN_HEIGHT - gridSpacing; y = y + gridSpacing)
-        {
-             GridLine line = new GridLine(0, y, SCREEN_WIDTH, y);
-             line.draw(gc);
-        }
     }
 }

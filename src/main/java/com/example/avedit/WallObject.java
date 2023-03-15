@@ -53,8 +53,8 @@ public class WallObject extends GameObject
 
     public void draw(GraphicsContext gc)
     {
-        System.out.println("sx: " + sx + "  sy: " + sy + "  ex:" + ex + "  ey:" + ey);
-        System.out.println("Drawing Object");
+        //System.out.println("sx: " + sx + "  sy: " + sy + "  ex:" + ex + "  ey:" + ey);
+        //System.out.println("Drawing Object");
         gc.setFill(wallColour);
         gc.fillRect(sx, sy, ex, ey);
         gc.setStroke(wallBorder);

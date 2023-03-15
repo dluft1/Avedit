@@ -22,4 +22,5 @@ public class GridLine {
         gc.setLineWidth(1.0);
         gc.strokeLine(sx, sy, ex, ey);
     }
+
 }
