@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public class Avedit extends Application {
 
+    CanvasManager canvasManager;
     private GraphicsContext gc, transgc;
     DrawingCanvas drawingPane;
     ArrayList<GameObject> gameObjects;
@@ -29,10 +30,14 @@ public class Avedit extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        canvasManager = new CanvasManager(1000, 1000);
+        gameObjects = new ArrayList<>();
+
         BorderPane border = new BorderPane();
         HBox hbox = addHBox();
         FlowPane toolPane = addToolBar();
         FlowPane propPane = addPropertiesPane();
+
         scrollGroup = addVbox();
         ScrollPane canvas = new ScrollPane();
         canvas.setStyle("-fx-background: #808080;");
@@ -124,47 +129,33 @@ public class Avedit extends Application {
 
         Group canvasGroup = new Group();
 
-        drawingPane = new DrawingCanvas(1000, 1000);
-        gameObjects = new ArrayList<>();
-
-        c = new Canvas(0, 0);
-        t = new Canvas(0, 0);
-
-        //System.out.println(vbox.getHeight());
         canvasGroup.addEventHandler(MouseEvent.MOUSE_PRESSED, this::pressHandler);
         canvasGroup.addEventHandler(MouseEvent.MOUSE_RELEASED, this::releaseHandler);
         canvasGroup.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::dragHandler);
 
-        canvasGroup.getChildren().addAll(c,t);
+        canvasGroup.getChildren().addAll(canvasManager.getDrawingCanvas(),canvasManager.getTransparentCanvas());
 
-        //vbox.getChildren().add(scrollPane);
-
-        gc = c.getGraphicsContext2D();
-        transgc = t.getGraphicsContext2D();
         return canvasGroup;
     }
 
     private void pressHandler(MouseEvent me)
     {
-        System.out.println("Mouse Pressed");
-        drawingPane.pressHandler(me);
+        canvasManager.mousePressed(me);
     }
 
     private void releaseHandler(MouseEvent me)
     {
-        drawingPane.releaseHandler(me, transgc, gc, gameObjects);
+        canvasManager.mouseDrawingRelease(me, gameObjects);
     }
 
     private void dragHandler(MouseEvent me)
     {
-        drawingPane.dragHandler(me, transgc);
+        canvasManager.mouseDrag(me);
     }
 
     private void toggleGrid()
     {
-        boolean toggle = drawingPane.toggleGrid();
-        if (toggle)
-            drawingPane.drawGrid(gc);
+        canvasManager.toggleGrid();
     }
 
     private void zoomIn()
