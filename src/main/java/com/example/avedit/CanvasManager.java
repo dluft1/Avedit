@@ -3,6 +3,7 @@ package com.example.avedit;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -21,26 +22,30 @@ public class CanvasManager {
     {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
+        this.gridSpacing = 10;
+
         displayPane = new DrawingCanvas(canvasWidth, canvasHeight);
         drawingCanvas = new Canvas(canvasWidth, canvasHeight);
         transparentCanvas = new Canvas(canvasWidth, canvasHeight);
         gridCanvas = new Canvas(canvasWidth, canvasHeight);
-        backgroundCanvas = new Canvas(canvasWidth + 50, canvasHeight + 50);
+        backgroundCanvas = new Canvas(canvasWidth + 200, canvasHeight + 200);
 
         displayContext = drawingCanvas.getGraphicsContext2D();
         transparentContext = transparentCanvas.getGraphicsContext2D();
         backgroundContext = backgroundCanvas.getGraphicsContext2D();
+        gridContext = gridCanvas.getGraphicsContext2D();
 
         backgroundContext.setFill(Color.WHITE);
         backgroundContext.fillRect(0, 0, canvasWidth + 50, canvasHeight + 50);
 
     }
-    private void resetBackground()
+    public void resetBackground()
     {
+        System.out.println("Drawing Background");
         backgroundContext.setFill(Color.LIGHTGRAY);
         backgroundContext.fillRect(0, 0, canvasWidth + 50, canvasHeight + 50);
         backgroundContext.setFill(Color.WHITE);
-        backgroundContext.fillRect(0, 0, canvasWidth + 49, canvasHeight + 49);
+        backgroundContext.fillRect(0, 0, canvasWidth, canvasHeight);
     }
 
     public Canvas getDrawingCanvas()
@@ -51,6 +56,16 @@ public class CanvasManager {
     public Canvas getTransparentCanvas()
     {
         return transparentCanvas;
+    }
+
+    public Canvas getGridCanvas()
+    {
+        return gridCanvas;
+    }
+
+    public Canvas getBackgroundCanvas()
+    {
+        return backgroundCanvas;
     }
 
     public GraphicsContext getDisplayContext()
@@ -82,8 +97,6 @@ public class CanvasManager {
     {
         for (GameObject item : gameObjects)
             item.draw(displayContext);
-        gridContext.
-
     }
 
     public void toggleGrid()
@@ -96,19 +109,21 @@ public class CanvasManager {
         else {
             gridActive = true;
             gridCanvas.setVisible(true);
+            drawGrid();
         }
     }
 
     public void drawGrid()
     {
-        for (double x = 0; x < gridCanvas.getWidth(); x = x + gridSpacing)
+        for (double x = 0; x < canvasWidth; x = x + gridSpacing)
         {
-            GridLine line = new GridLine(x, 0, x, gridCanvas.getHeight());
+            GridLine line = new GridLine(x, 0, x, canvasHeight);
             line.draw(gridContext);
         }
-        for (double y = 0; y < gridCanvas.getHeight(); y = y + gridSpacing)
+        for (double y = 0; y < canvasHeight; y = y + gridSpacing)
         {
-            GridLine line = new GridLine(0, y, transparentCanvas.getWidth(), y);
+            GridLine line = new GridLine(0, y, canvasWidth, y);
+            line.draw(gridContext);
         }
     }
 }

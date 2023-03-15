@@ -19,7 +19,7 @@ public class DrawingCanvas  {
     private double sx, sy;
     private double ex, ey;
     private double startingX, startingY;
-    private int selecteObject = 0;
+    private int selectedObject = 0;
     private Color shapeColour = Color.BLUE;
     private Boolean gridOn = true;
     private int gridSpacing = 50;
@@ -53,12 +53,9 @@ public class DrawingCanvas  {
         catch (IllegalArgumentException e)
         {
             System.out.println("Error on release");
-            gc.setFill(Color.LIGHTGRAY);
+            gc.setFill(Color.WHITE);
             gc.fillRect(0, 0, canvasWidth, canvasHeight);
         } // end catch
-
-        //gc.setFill(Color.BLACK);
-        //gc.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
         gc.setFill(Color.BLUE);
         transgc.clearRect(0, 0, canvasWidth, canvasHeight);
